@@ -13,6 +13,21 @@ local mappings = {
         map = ';',
         res = ':'
     },
+    {
+        mode = modes.normal,
+        map = '<leader>rn',
+        res = '<cmd>set rnu!<CR>'
+    },
+    {
+        mode = modes.normal,
+        map = '<leader>n',
+        res = '<cmd>set nu!<CR>'
+    },
+    {
+        mode = modes.normal,
+        map = '<C-c>',
+        res = '<cmd>%y+<CR>'
+    },
     ----------------------------------
     --                              --
     -- enter into normal/nterm mode --

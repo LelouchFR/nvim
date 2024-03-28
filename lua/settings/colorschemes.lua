@@ -5,6 +5,16 @@ require("catppuccin").setup {
             mantle = "#000000",
             crust = "#000000",
         },
+        frappe = {
+            base = "#000000",
+            mantle = "#000000",
+            crust = "#000000",
+        },
+        latte = {
+            base = "#000000",
+            mantle = "#000000",
+            crust = "#000000",
+        },
     }
 }
 
