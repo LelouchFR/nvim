@@ -9,11 +9,9 @@
 <details>
     <summary><h2 id="preview">Preview</h2></summary>
     <figure>
-        <img src="" />
-        <figcaption></figcaption>
+        <img src="./docs/preview.gif" />
     </figure>
 </details>
-
 
 <h2 id="installation">Installation</h2>
 
