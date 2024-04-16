@@ -123,6 +123,41 @@ local mappings = {
         map = '<',
         res = '<gv'
     },
+    --------------------------
+    --                      --
+    -- Split Screen and nav --
+    --                      --
+    --------------------------
+    {
+        mode = modes.normal,
+        map = "<leader>h",
+        res = "<C-w>s"
+    },
+    {
+        mode = modes.normal,
+        map = "<leader>v",
+        res = "<C-w>v"
+    },
+    {
+        mode = modes.normal,
+        map = "<C-h>",
+        res = "<C-w><C-h>"
+    },
+    {
+        mode = modes.normal,
+        map = "<C-j>",
+        res = "<C-w><C-j>"
+    },
+    {
+        mode = modes.normal,
+        map = "<C-k>",
+        res = "<C-w><C-k>"
+    },
+    {
+        mode = modes.normal,
+        map = "<C-l>",
+        res = "<C-w><C-l>"
+    }
 }
 
 for _, mapping in ipairs(mappings) do
