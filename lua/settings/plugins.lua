@@ -37,7 +37,8 @@ require('nvim-treesitter.configs').setup {
         "css",
         "javascript",
         "lua",
-        "python"
+        "python",
+        "tsx"
     },
     highlight = {
         enable = true
@@ -88,46 +89,4 @@ cmp.setup({
     }, {
         { name = 'buffer' },
     })
-})
-
--- dashboard.nvim
-
-local lolcat = vim.fn.executable "lolcat" == 1
-
-require('dashboard').setup({
-    theme = 'doom',
-    preview = lolcat and {
-        command = "lolcat",
-        file_path = "~/.config/nvim/lua/settings/ascii.txt",
-        file_width = 67,
-        file_height = 11,
-    },
-    config = {
-        center = {
-            {
-                icon = ' ',
-                icon_hl = 'File',
-                desc = 'Find File                         ',
-                desc_hl = 'String',
-                key = 'f',
-                key_format = ' %s',
-                action = builtin.find_files,
-            },
-            {
-                desc = 'Toggle NvimTree   ',
-                desc_hl = 'String',
-                key = 'n',
-                key_format = ' %s',
-                action = ':NvimTreeToggle',
-            },
-            {
-                desc = 'Quit Nvim   ',
-                desc_hl = 'String',
-                key = 'q',
-                key_format = ' %s',
-                action = ':q',
-            },
-        },
-        footer = {}
-    },
 })

@@ -1,5 +1,3 @@
-
-
 plugins = {
     'nvim-tree/nvim-web-devicons',
     'nvim-tree/nvim-tree.lua',
@@ -21,7 +19,6 @@ plugins = {
     'hrsh7th/nvim-cmp',
     'hrsh7th/cmp-vsnip',
     'hrsh7th/vim-vsnip',
-    'nvimdev/dashboard-nvim',
 }
 
 
