@@ -38,7 +38,12 @@ require('nvim-treesitter.configs').setup {
         "javascript",
         "lua",
         "python",
-        "tsx"
+        "tsx",
+        "asm",
+        "go",
+        "sql",
+        "markdown",
+        "php",
     },
     highlight = {
         enable = true
@@ -49,9 +54,15 @@ require('nvim-treesitter.configs').setup {
 
 require("mason").setup()
 
-require("lspconfig").rust_analyzer.setup {}
+require('lspconfig').rust_analyzer.setup {}
 require("lspconfig").pyright.setup {}
 require("lspconfig").custom_elements_ls.setup {}
+require("lspconfig").ts_ls.setup {}
+require("lspconfig").cssls.setup {}
+require('lspconfig').asm_lsp.setup {}
+require('lspconfig').html.setup {}
+require('lspconfig').gopls.setup {}
+require('lspconfig').texlab.setup {}
 
 -- lualine.nvim
 
@@ -82,6 +93,8 @@ cmp.setup({
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.abort(),
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
+	['<Tab>'] = cmp.mapping.select_next_item(),
+	['<S-Tab>'] = cmp.mapping.select_prev_item(),
     }),
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
@@ -89,4 +102,13 @@ cmp.setup({
     }, {
         { name = 'buffer' },
     })
+})
+
+-- rich presence
+
+require("presence").setup({})
+
+require("hex").setup({
+    dump_cmd = 'xxdi.pl',
+    assemble_cmd = 'xxdi.pl',
 })
