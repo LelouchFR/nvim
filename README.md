@@ -31,6 +31,7 @@ after that, to install the plugins (more infos about the plugin used [here](#Plu
         <li><a href="https://github.com/nvim-tree/nvim-tree.lua">nvim-tree/nvim-tree.lua</a></li>
         <li><a href="https://github.com/jiangmiao/auto-pairs">jiangmiao/auto-pairs</a></li>
         <li><a href="https://github.com/numToStr/Comment.nvim">numToStr/Comment.nvim</a></li>
+        <li><a href="https://github.com/L3MON4D3/LuaSnip.nvim">L3MON4D3/LuaSnip.nvim</a></li>
         <li><a href="https://github.com/akinsho/bufferline.nvim">akinsho/bufferline.nvim</a></li>
         <li><a href="https://github.com/catppuccin/nvim">catppuccin/nvim</a></li>
         <li><a href="https://github.com/nvim-treesitter/nvim-treesitter">nvim-treesitter/nvim-treesitter</a></li>
@@ -46,8 +47,7 @@ after that, to install the plugins (more infos about the plugin used [here](#Plu
         <li><a href="https://github.com/hrsh7th/cmp-cmdline">hrsh7th/cmp-cmdline</a></li>
         <li><a href="https://github.com/hrsh7th/nvim-cmp">hrsh7th/nvim-cmp</a></li>
         <li><a href="https://github.com/hrsh7th/cmp-vsnip">hrsh7th/cmp-vsnip</a></li>
-        <li><a href="https://github.com/hrsh7th/vim-vsnip">hrsh7th/vim-vsnip</a></li>
-        <li><a href="https://github.com/nvimdev/dashboard-nvim">nvimdev/dashboard-nvim</a></li>
+        <li><a href="https://github.com/RaafatTurki/hex.nvim">RaafatTurki/hex.nvim</a></li>
     </ul>
 </details>
 
@@ -211,6 +211,12 @@ after that, to install the plugins (more infos about the plugin used [here](#Plu
                 <td>&lt;leader&gt;ff</td>
                 <td>builtin.find_files</td>
                 <td>telescope files</td>
+            </tr>
+            <tr>
+                <td>normal</td>
+                <td>&lt;leader&gt;fm</td>
+                <td>builtin.marks</td>
+                <td>vim marks</td>
             </tr>
             <tr>
                 <td>normal</td>

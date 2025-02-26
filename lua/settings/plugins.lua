@@ -27,9 +27,61 @@ require("Comment").setup()
 map('n', '<leader>/', 'gcc', { noremap = true, silent = true })
 map('v', '<leader>/', 'gc', { noremap = true, silent = true })
 
+-- luasnip
+
+require("luasnip").setup({
+    keep_roots = true,
+    link_roots = true,
+    link_children = true,
+    update_events = "TextChanged,TextChangedI",
+    delete_check_events = "TextChanged",
+    ext_opts = {
+        [require("luasnip.util.types").choiceNode] = {
+            active = {
+                virt_text = { { "choiceNode", "Comment" } }
+            },
+        },
+    },
+    ext_base_prio = 300,
+    ext_prio_increase = 1,
+    enable_autosnippets = true,
+    store_selection_keys = "<Tab>",
+    ft_func = function()
+        return vim.split(vim.bo.filetype, ".", true)
+    end,
+})
+
+require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/lua/snippets/" })
+
+-- snipml.nvim
+-- see project https://github.com/LelouchFR/snipml.vim
+
+vim.opt.runtimepath:append("~/Documents/code/lua/snipml.nvim")
+require("snipml").setup({
+    default_tag = "div",
+    default_count = 1,
+    lang_triggers = { "html", "twig", "xml", "markdown", "typescriptreact" },
+    indent = "    ",
+    self_closing_tags = { img = true, input = true, br = true },
+    default_tag_content = {
+        a = "link",
+        button = "submit",
+    },
+    default_tag_attributes = {
+        img = { "src", "alt" },
+        a = { "href" },
+        label = { "for" },
+        input = { "type", "id", "name" },
+    },
+
+    enable_repeat = true,
+    enable_nesting = true,
+    enable_base = true,
+})
+
 -- treesitter.nvim
 
-require('nvim-treesitter.configs').setup {
+require('nvim-treesitter.configs').setup({
     ensure_installed = {
         "rust",
         "typescript",
@@ -44,25 +96,58 @@ require('nvim-treesitter.configs').setup {
         "sql",
         "markdown",
         "php",
+        "twig",
+        "c",
     },
     highlight = {
         enable = true
     },
-}
+})
 
 -- mason.nvim & lspconfig
 
 require("mason").setup()
+local lsp = require('lspconfig')
 
-require('lspconfig').rust_analyzer.setup {}
-require("lspconfig").pyright.setup {}
-require("lspconfig").custom_elements_ls.setup {}
-require("lspconfig").ts_ls.setup {}
-require("lspconfig").cssls.setup {}
-require('lspconfig').asm_lsp.setup {}
-require('lspconfig').html.setup {}
-require('lspconfig').gopls.setup {}
-require('lspconfig').texlab.setup {}
+local lsp_list = {lsp.pyright, lsp.custom_elements_ls, lsp.ts_ls, lsp.cssls, lsp.asm_lsp, lsp.html, lsp.gopls, lsp.texlab, lsp.twiggy_language_server, lsp.clangd, lsp.intelephense}
+
+for _, language_server in ipairs(lsp_list) do
+    if language_server then
+        language_server.setup({})
+    end
+end
+
+lsp.rust_analyzer.setup({
+    cmd = { "/home/lelouch/.cargo/bin/rust-analyzer" }
+})
+
+lsp.lua_ls.setup({
+    on_init = function (client)
+        if client.workspace_folders then
+            local path = client.workspace_folders[1].name
+            if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
+                return
+            end
+        end
+
+        client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+            runtime = {
+                version = 'LuaJIT'
+            },
+            diagnostics = {
+                globals = { 'vim' },
+            },
+            workspace = {
+                checkThirdParty = false,
+                library = vim.env.VIMRUNTIME,
+            },
+            telemetry = { enable = false },
+        })
+    end,
+    settings = {
+        Lua = {}
+    }
+})
 
 -- lualine.nvim
 
@@ -71,7 +156,9 @@ require('lualine').setup()
 -- telescope.nvim
 
 local builtin = require('telescope.builtin')
+
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fm', builtin.marks, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
@@ -83,7 +170,7 @@ local cmp = require('cmp')
 cmp.setup({
     snippet = {
         expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
+            require("luasnip").lsp_expand(args.body)
         end,
     },
     window = {},
@@ -93,20 +180,30 @@ cmp.setup({
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.abort(),
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
-	['<Tab>'] = cmp.mapping.select_next_item(),
-	['<S-Tab>'] = cmp.mapping.select_prev_item(),
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if vim.fn.pumvisible() == 1 then
+                cmp.mapping.select_next_item()(fallback)
+            elseif require("luasnip").expand_or_jumpable() then
+                require("luasnip").expand_or_jump()
+            else
+                cmp.mapping.select_next_item()(fallback)
+            end
+        end, { "i", "s" }),
+        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
     }),
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'vsnip' },
     }, {
+        { name = 'luasnip' },
         { name = 'buffer' },
     })
 })
 
 -- rich presence
 
-require("presence").setup({})
+require("presence").setup({
+    client_id = "530463573986770964",
+})
 
 require("hex").setup({
     dump_cmd = 'xxdi.pl',

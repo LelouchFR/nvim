@@ -1,8 +1,9 @@
-plugins = {
+local plugins = {
     'nvim-tree/nvim-web-devicons',
     'nvim-tree/nvim-tree.lua',
     'jiangmiao/auto-pairs',
     'numToStr/Comment.nvim',
+    { 'L3MON4D3/LuaSnip', { tag = 'v2.*', run = 'make install_jsregexp' } },
     { 'akinsho/bufferline.nvim', { tag = '*' } },
     { 'catppuccin/nvim', { as = 'catppuccin' } },
     'nvim-treesitter/nvim-treesitter',
@@ -18,7 +19,6 @@ plugins = {
     'hrsh7th/cmp-cmdline',
     'hrsh7th/nvim-cmp',
     'hrsh7th/cmp-vsnip',
-    'hrsh7th/vim-vsnip',
     'andweeb/presence.nvim',
     'RaafatTurki/hex.nvim',
 }
