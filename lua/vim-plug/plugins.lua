@@ -6,7 +6,7 @@ local plugins = {
     { 'L3MON4D3/LuaSnip', { tag = 'v2.*', run = 'make install_jsregexp' } },
     { 'akinsho/bufferline.nvim', { tag = '*' } },
     { 'catppuccin/nvim', { as = 'catppuccin' } },
-    'nvim-treesitter/nvim-treesitter',
+    { 'nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' } },
     'williamboman/mason.nvim',
     'neovim/nvim-lspconfig',
     'nvim-lualine/lualine.nvim',

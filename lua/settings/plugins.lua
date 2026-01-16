@@ -60,7 +60,7 @@ vim.opt.runtimepath:append("~/Documents/code/lua/snipml.nvim")
 require("snipml").setup({
     default_tag = "div",
     default_count = 1,
-    lang_triggers = { "html", "twig", "xml", "markdown", "typescriptreact" },
+    lang_triggers = { "html", "twig", "xml" },
     indent = "    ",
     self_closing_tags = { img = true, input = true, br = true },
     default_tag_content = {
@@ -81,7 +81,12 @@ require("snipml").setup({
 
 -- treesitter.nvim
 
-require('nvim-treesitter.configs').setup({
+local status_ok, treesitter = pcall(require, 'nvim-treesitter')
+if not status_ok then
+	vim.notify('nvim-treesitter not loaded !', vim.log.levels.ERROR)
+end
+
+treesitter.setup({
     ensure_installed = {
         "rust",
         "typescript",
@@ -102,52 +107,66 @@ require('nvim-treesitter.configs').setup({
     highlight = {
         enable = true
     },
+    indent = {
+        enable = true
+    },
 })
 
 -- mason.nvim & lspconfig
 
 require("mason").setup()
-local lsp = require('lspconfig')
 
-local lsp_list = {lsp.pyright, lsp.custom_elements_ls, lsp.ts_ls, lsp.cssls, lsp.asm_lsp, lsp.html, lsp.gopls, lsp.texlab, lsp.twiggy_language_server, lsp.clangd, lsp.intelephense}
-
-for _, language_server in ipairs(lsp_list) do
-    if language_server then
-        language_server.setup({})
-    end
-end
-
-lsp.rust_analyzer.setup({
-    cmd = { "/home/lelouch/.cargo/bin/rust-analyzer" }
-})
-
-lsp.lua_ls.setup({
-    on_init = function (client)
-        if client.workspace_folders then
-            local path = client.workspace_folders[1].name
-            if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
-                return
+local servers = {
+    vue_ls = {},
+    pyright = {},
+    custom_elements_ls = {},
+    ts_ls = {},
+    cssls = {},
+    asm_lsp = {},
+    html = {},
+    gopls = {},
+    texlab = {},
+    twiggy_language_server = {},
+    clangd = {},
+    intelephense = {},
+    tailwindcss = {},
+    vls = {},
+    rust_analyzer = {
+        cmd = { "/home/lelouch/.cargo/bin/rust-analyzer" }
+    },
+    lua_ls = {
+        on_init = function (client)
+            if client.workspace_folders then
+                local path = client.workspace_folders[1].name
+                if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc')) then
+                    return
+                end
             end
-        end
 
-        client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-            runtime = {
-                version = 'LuaJIT'
-            },
-            diagnostics = {
-                globals = { 'vim' },
-            },
-            workspace = {
-                checkThirdParty = false,
-                library = vim.env.VIMRUNTIME,
-            },
-            telemetry = { enable = false },
-        })
-    end,
-    settings = {
-        Lua = {}
+            client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+                runtime = {
+                    version = 'LuaJIT'
+                },
+                diagnostics = {
+                    globals = { 'vim' },
+                },
+                workspace = {
+                    checkThirdParty = false,
+                    library = vim.env.VIMRUNTIME,
+                },
+                telemetry = { enable = false },
+            })
+        end,
+        settings = {
+            Lua = {}
+        }
     }
-})
+}
+
+for server_name, config in pairs(servers) do
+    vim.lsp.config[server_name] = config
+    vim.lsp.enable(server_name)
+end
 
 -- lualine.nvim
 

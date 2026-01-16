@@ -28,6 +28,11 @@ local mappings = {
         map = '<C-c>',
         res = '<cmd>%y+<CR>'
     },
+    {
+        mode = modes.normal,
+        map = '<C-i>',
+        res = '<cmd>lua vim.diagnostic.open_float()<CR>'
+    },
     ----------------------------------
     --                              --
     -- enter into normal/nterm mode --
