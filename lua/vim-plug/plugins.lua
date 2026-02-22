@@ -12,7 +12,7 @@ local plugins = {
     'nvim-lualine/lualine.nvim',
     'airblade/vim-gitgutter',
     'nvim-lua/plenary.nvim',
-    { 'nvim-telescope/telescope.nvim', { tag = '0.1.6' } },
+    { 'nvim-telescope/telescope.nvim', { tag = '*' } },
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-path',

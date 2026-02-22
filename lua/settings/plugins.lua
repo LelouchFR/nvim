@@ -103,6 +103,9 @@ treesitter.setup({
         "php",
         "twig",
         "c",
+        "vue",
+        "scss",
+        "json"
     },
     highlight = {
         enable = true
@@ -116,11 +119,25 @@ treesitter.setup({
 
 require("mason").setup()
 
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 local servers = {
-    vue_ls = {},
+    vue_ls = {
+        filetypes = { 'vue' },
+        init_options = {
+            typescript = {
+                tsdk = vim.fn.getcwd() .. '/node_modules/typescript/lib'
+            }
+        }
+    },
+    vtsls = {
+        filetypes = { 'typescript', 'vue' }
+    },
     pyright = {},
     custom_elements_ls = {},
-    ts_ls = {},
+    ts_ls = {
+        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact' }
+    },
     cssls = {},
     asm_lsp = {},
     html = {},
@@ -164,6 +181,7 @@ local servers = {
 }
 
 for server_name, config in pairs(servers) do
+    config.capabilities = capabilities
     vim.lsp.config[server_name] = config
     vim.lsp.enable(server_name)
 end
