@@ -7,6 +7,7 @@ local plugins = {
     { 'akinsho/bufferline.nvim', { tag = '*' } },
     { 'catppuccin/nvim', { as = 'catppuccin' } },
     { 'nvim-treesitter/nvim-treesitter', { ['do'] = ':TSUpdate' } },
+    'stevearc/conform.nvim',
     'williamboman/mason.nvim',
     'neovim/nvim-lspconfig',
     'nvim-lualine/lualine.nvim',

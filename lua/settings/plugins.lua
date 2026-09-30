@@ -86,33 +86,24 @@ if not status_ok then
 	vim.notify('nvim-treesitter not loaded !', vim.log.levels.ERROR)
 end
 
-treesitter.setup({
-    ensure_installed = {
-        "rust",
-        "typescript",
-        "html",
-        "css",
-        "javascript",
-        "lua",
-        "python",
-        "tsx",
-        "asm",
-        "go",
-        "sql",
-        "markdown",
-        "php",
-        "twig",
-        "c",
-        "vue",
-        "scss",
-        "json"
+treesitter.setup({})
+
+treesitter.install({
+    "rust", "typescript", "html", "css", "javascript", "lua", "python",
+    "tsx", "asm", "go", "sql", "markdown", "php", "twig", "c", "vue",
+    "scss", "json", "blade",
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = {
+        'rust', 'typescript', 'html', 'css', 'javascript', 'lua', 'python',
+        'typescriptreact', 'asm', 'go', 'sql', 'markdown', 'php', 'twig',
+        'c', 'vue', 'scss', 'json', 'blade',
     },
-    highlight = {
-        enable = true
-    },
-    indent = {
-        enable = true
-    },
+    callback = function()
+        pcall(vim.treesitter.start)
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
 })
 
 -- mason.nvim & lspconfig
@@ -121,6 +112,28 @@ require("mason").setup()
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
+local vue_ls_path = vim.fn.stdpath('data')
+  .. '/mason/packages/vue-language-server/node_modules/@vue/language-server'
+
+vim.lsp.config('vtsls', {
+  filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+  settings = {
+    vtsls = {
+      tsserver = {
+        globalPlugins = {
+          {
+            name = '@vue/typescript-plugin',
+            location = vue_ls_path,
+            languages = { 'vue' },
+            configNamespace = 'typescript',
+          },
+        },
+      },
+    },
+  },
+})
+
+vim.lsp.enable({ 'vtsls', 'vue_ls' })
 local servers = {
     vue_ls = {
         filetypes = { 'vue' },
@@ -131,7 +144,21 @@ local servers = {
         }
     },
     vtsls = {
-        filetypes = { 'typescript', 'vue' }
+      filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+      settings = {
+        vtsls = {
+          tsserver = {
+            globalPlugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = vue_ls_path,
+                languages = { 'vue' },
+                configNamespace = 'typescript',
+              },
+            },
+          },
+        },
+      },
     },
     pyright = {},
     custom_elements_ls = {},
@@ -140,14 +167,19 @@ local servers = {
     },
     cssls = {},
     asm_lsp = {},
-    html = {},
+    html = {
+        filetypes = { 'html', 'blade' }
+    },
     gopls = {},
     texlab = {},
     twiggy_language_server = {},
     clangd = {},
-    intelephense = {},
+    intelephense = {
+        filetypes = { 'php', 'blade' }
+    },
     tailwindcss = {},
     vls = {},
+    laravel_ls = {},
     rust_analyzer = {
         cmd = { "/home/lelouch/.cargo/bin/rust-analyzer" }
     },
@@ -185,6 +217,22 @@ for server_name, config in pairs(servers) do
     vim.lsp.config[server_name] = config
     vim.lsp.enable(server_name)
 end
+
+-- conform.nvim
+
+require("conform").setup({
+    formatters_by_ft = {
+        blade = { "blade-formatter" },
+    },
+    format_on_save = {
+        timeout_ms = 3000,
+        lsp_format = "never",
+    },
+})
+
+vim.keymap.set('n', '<leader>fF', function()
+    require("conform").format({ async = true })
+end, {})
 
 -- lualine.nvim
 
